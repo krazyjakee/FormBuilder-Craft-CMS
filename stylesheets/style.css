@@ -221,7 +221,7 @@ header {
   top: 0;
   right: 0;
   background: #ffffff;
-  padding: 0 5% 1em;
+  padding: 30px 5% 1em;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 1;
