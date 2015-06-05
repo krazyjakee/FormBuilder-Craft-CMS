@@ -26,9 +26,10 @@
 <section class="cd-faq">
 	<ul class="cd-faq-categories">
 		<li><a class="selected" href="#basics">Installation</a></li>
+		<li><a href="#createfields">Create Fields</a></li>
 		<li><a href="#createforms">Create Forms</a></li>
 		<li><a href="#displayform">Display Form</a></li>
-		<li><a href="#credits">Credits</a></li>
+		<li><a href="#requiredfields">Required Fields</a></li>
 	</ul> <!-- cd-faq-categories -->
 
 	<div class="cd-faq-items">
@@ -53,96 +54,122 @@
 				<img src="images/1.2.png" />
 			</div>
 		</ul> <!-- cd-faq-group -->
-		
+
+
+
+
+
+		<ul id="createfields" class="cd-faq-group">
+			<li class="cd-faq-title"><h2>Create Fields</h2></li>
+			<div class="block">
+				<p><span>1</span> Got to Settings->Fields and hit "+ New Field"</p>
+			</div>
+
+			<div class="block">
+				<p><span>2</span> Fill out the field's information.  Make sure to use | FormBuilder | fields only</p>
+			</div>
+		</ul>
+
 
 		<ul id="createforms" class="cd-faq-group">
 			<li class="cd-faq-title"><h2>Create Forms</h2></li>
 			<div class="block">
-				<p><span>1</span> In your browser go to the plugin page and click "New form". Give your form a Name and it will automatically generate a Handle for you. Enter where you want the form to send (you can enter multiple emails comma separated). Enter you email's subject line. You can leave Email Template Path as is or create your own markup <code>formbuilder/templates/email</code>, this is what gets sent to the email entered previously. </p>
-				<p>Design your field layout is the gold of this plugin. This is where you assign fields to your form. To do this we use Craft's fields creator first, so go to <code>/settings/fields</code> and add a new field. After you add the new field it will appear in your field layout and you will be able to drag and drop the fields into your form. When done save the form. </p>
-				<img src="images/1.3.png" />
+				<p><span>1</span> Go back to FormBuilder forms page and hit "+ New Form"</p>
+				<img src="images/1.3.png" /><br />
+				<h2 class="subheading">Form Settings</h2>
+				<h3><span class="bold">Form Name</span> - Enter name of your form</h3>
+				<h3><span class="bold">Handle</span> - Will be generated automatically</h3>
+				<h3><span class="bold">Email Subject</span> - This will be subject line for email notifications</h3>
+				<h3><span class="bold">Use AJAX?</span> - Check this if you want the form submission via ajax, this will use javascript to validate 'required' fields</h3>
+				<h3><span class="bold">Redirect To Success Page</span> - Check if you want to redirect to a success page (ex: "/thank-you")</h3>
+				<h3><span class="bold">Redirect URL</span> - Enter url to a success page</h3>
+				<h2 class="subheading">Messages</h2>
+				<h3><span class="bold">Success Message</span> - Enter success message for form submissions</h3>
+				<h3><span class="bold">Error Message</span> - Enter error message for form submissions</h3>
+				<h2 class="subheading">Notifications</h2>
+				<h3><span class="bold">Send Notification?</span> - Check this if you want to notify form owner of form submission</h3>
+				<h3><span class="bold">To Email</span> - Enter email where the submission notification will be sent to?</h3>
+				<h3><span class="bold">Email Template Path</span> - Path where the email template lives</h3>
+				<h3><span class="bold">Notify Registrant?</span> - Check this if you want to notify the form submitter of their successful submission. <span class="note">You need to first save the form for this to show up.</span></h3>
+				<h3><span class="bold">Registrant Email Template Path</span> - Path where the email template lives</h3>
+				<h3><span class="bold">Notification Field</span> - Path where the email template lives. <span class="note">You must first add some fields to the fields section and save the form for this to show up. Also this field requires "| FormBuilder | Email Address" fieldtype to be used.</span></h3>
+				<h2 class="subheading">Fields</h2>
+				<h3><span class="bold">Fieldsets</span> - You can create many fieldsets by hitting "Add Fieldset"</h3>
+				<h3><span class="bold">Create New Field</span> - This will redirect you to settings->fields where you can create a new field</h3>
 			</div>
 
 			<div class="block">
-				<p><span>2</span> Now your form is ready for use. Take note of the form Handle, we will use that in the next steps to display our Subscription Form.</p>
-				<img src="images/1.4.png" />
+				<p>Save! Now your form is ready for use. Take note of the form Handle, we will use that in the next steps to display our Subscription Form.</p>
+				
 			</div>
 		</ul>
 
 		<ul id="displayform" class="cd-faq-group">
 			<li class="cd-faq-title"><h2>Display Form</h2></li>
 			<div class="block">
-				<p><span>1</span> To make ecerything work you must copy 2 directories from <code>craft/app/templates</code>. You'll need <code>_components</code> and <code>_includes</code>. Copy those 2 folders into your templates directory <code>craft/templates</code>. Now you are ready to display your form.</p>
+				<p><span>Line 8</span> Enter form handle name here.</p>
 			</div>
 
 			<div class="block">
-				<p><span>2</span> Check the plugin directory for sample mark up <code>sampleForm.html</code>. Lets look at the important stuff.</p>
-				<p>Line 2 - we use this to render out our fields (in earlier steps you coppied crafts _include into your template directory).</p>
-				<p>Line 4 - Is the most important. This is where you enter you forms Handle name, so the template can locate it. Earlier we created Subscription Form and the form handle was subscriptionForm, so lets replace the 'ENTER YOUR FORM HANDLE HERE' with your form's handle.</p>
-				<p>Line 26 - Here you can enter the path where you want users to be redirected to after the form is successfully sent.</p>
-				<p>Line 29 - Required fields must be created manually at the moment. So if you have fields that required validation you need to create them. Take a look at <code>name="required[yourEmail]"</code>, basically when you create fields using Craft's Filed Creator each field has a handle assigned to it. So go find out your fields handle and put it between the brackets. You need to create new hidden input for each required field. NOTE: the validation for now is just checking if the field is blank or not, in the future I want to make sure emails get validated, etc. Also I would like to make the required fields dynaic as well...</p>
 				<pre class="brush: php">
+					{#
+					 # Contact Form Sample Code
+					 # ------------------------
+					 #}
+
 					{% extends "_layout" %}
-					{% import "_includes/forms" as forms %}
 
 					{% set form = craft.formBuilder.getFormByHandle('ENTER YOUR FORM HANDLE HERE') %}
-					{% set fields = form.fieldLayout.getFieldLayout().getFields() %}
+					{% set tabs = form.fieldLayout.getFieldLayout().getTabs() %}
+					{% set pluginScripts = craft.formBuilder.pluginScripts(form) %}
 
 					{% block content %}
-					<div class="container">
+					  <h1>{{ entry.title }}</h1>
 
-					{# Error handling #}
-					{% if craft.session.hasFlash('error') %}
-					  <div class="errors">
-					  {% for error in craft.session.getFlash('error').required %}
-					    <p class="error">{{ error }}</p>
-					  {% endfor %}
-					  </div>
-					{% endif %}
+					  <form method="post" accept-charset="utf-8" name="{{ form.handle }}" class="formbuilder-form" id="{{ form.handle }}" data-parsley-errors-container=".formbuilder-notification">
+					    <input type="hidden" name="action" value="formBuilder/entries/saveFormEntry">
+					    <input type="hidden" name="redirect" data-redirect="{{form.successPageRedirect}}" value="{{form.redirectUrl}}">
+					    <input type="hidden" name="formHandle" value="{{form.handle}}">
+					    
+					    {% for tab in tabs %}
+					      {% set fields = tab.getFields() %}
+					      
+					      <fieldset class="{{loop.index}}">
+					        <legend>{{ tab.name }}</legend>
+					        {% for field in fields %}
+					          {% set input = craft.formBuilder.getInputHtml(field) %}
+					          {{ input | raw }}
+					        {% endfor %} 
+					      </fieldset>
+					    {% endfor %}
+					    
+					    {# Error/Success Messages #}
+					    {% if craft.session.hasFlash('error') or craft.session.hasFlash('success') %}
+					      {% if craft.session.hasFlash('error') %}<div class="formbuilder-notification"><p class="error-message">{{ craft.session.getFlash('error') | raw }}<p></div>{% endif %}
+					      {% if craft.session.hasFlash('success') %}<div class="formbuilder-notification success"><p class="success-message">{{ craft.session.getFlash('success') | raw }}</p></div>{% endif %}
+					    {% else %}
+					      <div class="formbuilder-notification"></div>
+					    {% endif %}
 
-					{# Success handling #}
-					{% if craft.session.hasFlash('success') %}
-					  <p class="success">{{ craft.session.getFlash('success') | raw }}</p>
-					{% endif %}
+					    <button type="submit">Submit Message</button>
 
-					<form method="post" accept-charset="utf-8">
-					  <input type="hidden" name="action" value="formBuilder/entries/saveFormEntry">
-					  <input type="hidden" name="redirect" value="/">
-					  <input type="hidden" name="formHandle" value="{{form.handle}}">
-					  <input type="hidden" name="formHoneypot" value="">
-					  <input type="hidden" name="required[yourEmail]" value="Please enter your email address.">
 
-					  {% for field in fields %}
-					    {% include "_includes/field" with {
-					      field: craft.fields.getFieldById(field.fieldId),
-					      required: field.required,
-					    } only %}
-					  {% endfor %}
+					  </form>
 
-					  <button type="submit">
-					    Submit Message
-					  </button>
-
-					</form>
-
-					</div>
 					{% endblock %}
 				</pre>
 			</div>
 
 			<div class="block">
-				<p><span>3</span> Thats it, your form should now render with your fields.</p>
+				<p>Thats it, your form should now render with your fields.</p>
 			</div>
 		</ul>
 
-		<ul id="credits" class="cd-faq-group">
-			<li class="cd-faq-title"><h2>Credits</h2></li>
+		<ul id="requiredfields" class="cd-faq-group">
+			<li class="cd-faq-title"><h2>Required Fields</h2></li>
 			<div class="block">
-				<ol>
-					<li><p>This plugin was developed from another similar plugin called <a href="https://github.com/synergema/Craft-SimpleForm" target="_blank">SimpleForm</a></p></li>
-					<li><p>Logo Icon: Layers designed by <a href="http://www.thenounproject.com/itscip">Ciprian Popescu</a> from the <a href="http://www.thenounproject.com">Noun Project</a></p></li>
-				</ol>
-
+				<p>If you want to make required fields you can do that by clicking on the "cog" icon in the Fields section. See screenshot. This will add HTML5 "required" attribute to the input field. If your form uses Ajax to post submissions, javascript will validate those fields (using Parsleyjs).</p>
+				<img src="images/1.4.png" />
 			</div>
 		</ul>
 
