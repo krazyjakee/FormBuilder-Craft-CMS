@@ -7,6 +7,20 @@
 Primary style
 
 -------------------------------- */
+h2.subheading {
+  font-weight: 600;
+  font-size: 18px;
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+}
+h3 {
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 8px;
+}
+h3 .bold { font-weight: 600;}
+h3 .note { color: #da5a47; }
+
 *, *::after, *::before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

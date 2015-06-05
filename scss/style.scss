@@ -11,7 +11,13 @@
 Primary style
 
 -------------------------------- */
+h3.subheading {
+	font-weight: bold;
 
+	&.bold {
+		font-weight: bold;
+	}
+}
 *, *::after, *::before {
 	@include box-sizing(border-box);
 }
