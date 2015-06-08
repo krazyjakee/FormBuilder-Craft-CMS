@@ -26,7 +26,7 @@ class FormBuilder_DropdownFieldType extends BaseOptionsFieldType
     if ($this->isFresh()) {
       $value = $this->getDefaultValue();
     }
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates');
     $html = craft()->templates->render('_includes/forms/select', array(
       'id'            => $id,
       'name'          => $name,

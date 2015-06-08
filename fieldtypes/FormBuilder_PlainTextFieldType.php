@@ -50,7 +50,7 @@ class FormBuilder_PlainTextFieldType extends BaseFieldType
 
     $id = craft()->templates->namespaceInputId($fieldId, 'field'); 
 
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates');
     $html = craft()->templates->render('_components/fieldtypes/PlainText/input', array(
       'id'            => $id,
       'name'          => $name,

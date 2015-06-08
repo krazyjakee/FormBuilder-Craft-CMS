@@ -29,7 +29,7 @@ class FormBuilder_MultiSelectFieldType extends BaseOptionsFieldType
       $values = $this->getDefaultValue();
     }
 
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates');
     $html = craft()->templates->render('_includes/forms/multiselect', array(
       'id'            => $id,
       'name'          => $name,

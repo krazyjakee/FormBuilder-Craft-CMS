@@ -27,7 +27,7 @@ class FormBuilder_RadioButtonsFieldType extends BaseOptionsFieldType
       $value = $this->getDefaultValue();
     }
 
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates');
     $html = craft()->templates->render('_includes/forms/radioGroup', array(
       'id'            => $id,
       'name'          => $name,
