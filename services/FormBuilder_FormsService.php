@@ -115,6 +115,8 @@ class FormBuilder_FormsService extends BaseApplicationComponent
 		$formRecord->successPageRedirect    							= $form->successPageRedirect;
 		$formRecord->redirectUrl    											= $form->redirectUrl;
 		$formRecord->useReCaptcha    											= $form->useReCaptcha;
+		$formRecord->hasFileUploads    										= $form->hasFileUploads;
+		$formRecord->uploadSource    											= $form->uploadSource;
 		$formRecord->successMessage    										= $form->successMessage;
 		$formRecord->errorMessage    											= $form->errorMessage;
 		$formRecord->notifyFormAdmin     									= $form->notifyFormAdmin;

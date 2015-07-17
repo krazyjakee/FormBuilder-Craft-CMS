@@ -82,16 +82,16 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
 	{	
 		$errors = false;
 		$email = new EmailModel();
+		$emailTo = explode(',', $form->toEmail);
 
 		$email->toEmail		= $form->toEmail;
-		$email->replyTo   = $form->toEmail;
+		$email->replyTo   = $emailTo[0];
 		$email->fromName  = craft()->getSiteName() . ' | Submission Notification';
 		$email->subject   = $form->subject;
 		$email->htmlBody  = $message;
 
-		$emailTo = explode(',', $form->toEmail);
 		foreach ($emailTo as $emailAddress) {
-			$email->toEmail = trim($emailAddress);
+			$email->toEmail = $emailAddress;
 			if (!craft()->email->sendEmail($email)) {
 				$errors = true;
 			}
@@ -106,7 +106,6 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
 	{
 		$errors = false;
 		$email = new EmailModel();
-
 		$emailTo = explode(',', $form->toEmail);
 
 		$email->toEmail   = $submitterEmail;

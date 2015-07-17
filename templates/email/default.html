@@ -6,7 +6,6 @@
   <table>
   {% for key, value in data %}
     {% set field = craft.fields.getFieldByHandle(key) %}
-
     {% if value %}
     <tr>
       <td><strong>{{ field.name }}: </strong></td>

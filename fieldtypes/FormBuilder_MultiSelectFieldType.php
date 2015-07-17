@@ -10,7 +10,7 @@ class FormBuilder_MultiSelectFieldType extends BaseOptionsFieldType
   //======================================================================
   public function getName()
   {
-    return Craft::t('| FormBuilder | Multi-select');
+    return Craft::t('| FormBuilder | Multi-Select');
   }
 
   //======================================================================

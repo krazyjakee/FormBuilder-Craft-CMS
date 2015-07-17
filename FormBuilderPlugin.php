@@ -20,7 +20,7 @@ class FormBuilderPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-    return '1.4.0';
+    return '1.4.3';
 	}
 
 	public function getDeveloper()

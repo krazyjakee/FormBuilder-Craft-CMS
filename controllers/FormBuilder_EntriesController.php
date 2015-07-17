@@ -6,6 +6,10 @@ class FormBuilder_EntriesController extends BaseController
 	protected $allowAnonymous = true;
   protected $defaultEmailTemplate = 'formbuilder/email/default';
 	protected $defaultRegistrantEmailTemplate = 'formbuilder/email/registrant';
+
+
+  protected $valid_extensions = array('image', 'compressed', 'excel', 'html', 'illustrator', 'json', 'pdf', 'photoshop', 'powerpoint', 'text', 'video', 'word', 'xml');
+  protected $assetFolderId = 1;
 	
 	//======================================================================
   // View All Entries
@@ -41,6 +45,7 @@ class FormBuilder_EntriesController extends BaseController
 	public function actionSaveFormEntry()
 	{
     $ajax = false;
+    $redirect = false;
 
     $formBuilderHandle = craft()->request->getPost('formHandle');
     if (!$formBuilderHandle) { throw new HttpException(404);}
@@ -61,10 +66,40 @@ class FormBuilder_EntriesController extends BaseController
     }
     
     $data = craft()->request->getPost();
-
     $postData = $this->_filterPostKeys($data);
-
     $formBuilderEntry = new FormBuilder_EntryModel();
+
+    $fileupload = true;
+    $validExtension = false;
+    if ($form->hasFileUploads) {
+      if (isset(array_values($_FILES)[0])) {
+        $filename = array_values($_FILES)[0]['name'];
+        $file = array_values($_FILES)[0]['tmp_name'];
+        $extension = IOHelper::getFileKind(IOHelper::getExtension($filename));
+        if (!in_array($extension, $this->valid_extensions)) {
+          $fileupload = false;
+          $validExtension = false;
+        } else {
+          $validExtension = true;
+        }
+
+        if ($validExtension) {
+          // Create formbuilder directory inside craft/storage if one doesn't exist
+          $storagePath = craft()->path->getStoragePath();
+          $myStoragePath = $storagePath . 'formbuilder/';
+          IOHelper::ensureFolderExists($myStoragePath);
+          $uploadDir = $myStoragePath;
+
+          // Rename each file with unique name
+          $uniqe_filename = uniqid() . '-' . $filename;
+          
+          foreach ($_FILES as $key => $value) {
+            $fileUploadHandle = $key;
+          }
+          $postData[$fileUploadHandle] = $uniqe_filename;
+        }
+      }
+    }
 
     $formBuilderEntry->formId     = $form->id;
     $formBuilderEntry->title      = $form->name;
@@ -78,13 +113,46 @@ class FormBuilder_EntriesController extends BaseController
         $captcha = craft()->request->getPost('g-recaptcha-response');
         $verified = craft()->recaptcha_verify->verify($captcha);
       } else {
-        $verified = true;
+        $verified = false;
       }
     } else {
       $verified = true;
     }
 
-    if ($verified && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
+    // Save Form Entry
+    if ($verified && $fileupload && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
+
+      // Save Uploaded File
+      if ($validExtension) {
+        if (move_uploaded_file($file, $uploadDir . $uniqe_filename)) {
+          IOHelper::deleteFile($file);
+
+          $file = $uploadDir . $uniqe_filename;
+          $fileModel = new AssetFileModel();
+
+          $fileModel->sourceId = $form->uploadSource;
+          $fileModel->folderId = $this->assetFolderId;
+
+          $fileModel->filename = IOHelper::getFileName($uniqe_filename);
+          $fileModel->originalName = IOHelper::getFileName($filename);
+          $fileModel->kind = IOHelper::getFileKind(IOHelper::getExtension($uniqe_filename));
+          $fileModel->size = filesize($file);
+          $fileModel->dateModified = IOHelper::getLastTimeModified($file);
+
+          if ($fileModel->kind == 'image') {
+            list ($width, $height) = ImageHelper::getImageSize($file);
+            $fileModel->width = $width;
+            $fileModel->height = $height;
+          }
+
+          craft()->assets->storeFile($fileModel);
+
+        } else {
+          $fileupload = false;
+        }
+
+      } // Valid extension
+
 
       if ($form->notifyFormAdmin && $form->toEmail != '') {
         $this->_sendEmailNotification($formBuilderEntry, $form);
@@ -101,6 +169,7 @@ class FormBuilder_EntriesController extends BaseController
       } else {
         $successMessage =  Craft::t('Thank you, we have received your submission and we\'ll be in touch shortly.');
       }
+      craft()->userSession->setFlash('success', $successMessage);
 
       if ($ajax) {
         $this->returnJson(
@@ -108,15 +177,16 @@ class FormBuilder_EntriesController extends BaseController
         );
       } else {
         if ($formRedirect) {
-          $this->redirectToPostedUrl();
-        } else {
-          craft()->userSession->setFlash('success', $successMessage);
+          $this->redirect($formRedirectUrl);
         }
       }
-
+      
     } else {
-
       if (!$verified) {
+        if (!$captchaPlugin) {
+          craft()->userSession->setFlash('error', 'Please enable reCaptcha plugin!');
+          $this->redirectToPostedUrl();
+        }
         craft()->userSession->setFlash('error', 'Please check captcha!');
         $this->redirectToPostedUrl();
       } 
@@ -139,6 +209,7 @@ class FormBuilder_EntriesController extends BaseController
         }
       }
     }
+
 	}
 
 	//======================================================================
@@ -229,7 +300,7 @@ class FormBuilder_EntriesController extends BaseController
 	{
 		$filterKeys = array(
       'action',
-      'redirect',
+      'formredirect',
 			'g-recaptcha-response',
       'formhandle'
 		);

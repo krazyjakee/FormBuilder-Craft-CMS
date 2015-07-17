@@ -25,6 +25,7 @@
 #create-form .fieldset { margin-top: 24px; }
 #create-form .fieldset.child { margin-top: 10px; }
 #create-form .fieldset.settings div:nth-child(5) { margin-bottom: 0; }
+#create-form .fieldset.settings div:nth-child(8) { margin-bottom: 0; }
 #create-form .fieldset.notifications div:nth-child(1) { margin-bottom: 0; }
 #create-form .fieldset.notifications div:nth-child(3) { margin-bottom: 0; }
 #create-form input[type=text] { box-shadow: none; border: 1px solid rgba(0, 0, 0, 0.2); padding: 12px; -webkit-transition: border 0.5s ease; -moz-transition: border 0.5s ease; transition: border 0.5s ease; }

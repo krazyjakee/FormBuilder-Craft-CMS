@@ -105,6 +105,39 @@
 			required: false
 		}) }}
 
+		{{ forms.checkboxField({
+			label: "Has File Uploads?"|t,
+			instructions: "Will this form have file uploads?"|t,
+			id: 'hasFileUploads',
+			class: 'hasFileUploads',
+			name: 'hasFileUploads',
+			value: 1,
+			checked: form.hasFileUploads,
+			errors: form.getErrors('hasFileUploads'),
+			required: false
+		}) }}
+
+		<div class="uploadSourceContainer" style="width: 100%">
+			{% set sources = craft.formBuilder.getAllAssetSources() %}
+			{% set sourceOptions = [{label: 'Select Asset Source', value: ''}] %}
+			{% for source in sources %}
+				{% set sourceOptions = sourceOptions|merge([{ label: source.name, value: source.id }]) %}
+			{% endfor %}
+			<div class="fieldset child">
+			{{ forms.selectField ({
+				label: "Select Uploads Source"|t,
+				instructions: "Where should we save uploaded files?."|t,
+				id: 'uploadSource',
+				class: 'uploadSource',
+				name: 'uploadSource',
+				options: sourceOptions ? sourceOptions : '',
+				value: form.uploadSource ? form.uploadSource : '',
+				errors: form.getErrors('uploadSource'),
+				required: false
+			}) }}
+			</div>
+		</div>
+
 		</div>
 		</div>
 
@@ -306,6 +339,20 @@
 	  	$('.redirectUrlHolder').slideUp()
 	  }
 	});
+
+	{# Has File Uploads #}
+	if($(".hasFileUploads").is(':checked')) {
+		$('.uploadSourceContainer').show()
+	} else {
+		$('.uploadSourceContainer').hide()
+	}
+  $(".hasFileUploads").change(function() {
+    if(this.checked) {
+    	$('.uploadSourceContainer').slideDown()
+    } else {
+    	$('.uploadSourceContainer').slideUp()
+    }
+  });
 
 	{# Notify Registrant Toggle #}
 	if($(".notifyRegistrant").is(':checked')) {

@@ -59,6 +59,8 @@ class FormBuilder_FormsController extends BaseController
 		$form->successPageRedirect     								= craft()->request->getPost('successPageRedirect');
 		$form->redirectUrl     												= craft()->request->getPost('redirectUrl');
 		$form->useReCaptcha     											= craft()->request->getPost('useReCaptcha');
+		$form->hasFileUploads     										= craft()->request->getPost('hasFileUploads');
+		$form->uploadSource     											= craft()->request->getPost('uploadSource');
 		$form->successMessage     										= craft()->request->getPost('successMessage');
 		$form->errorMessage     											= craft()->request->getPost('errorMessage');
 		$form->notifyFormAdmin     										= craft()->request->getPost('notifyFormAdmin');

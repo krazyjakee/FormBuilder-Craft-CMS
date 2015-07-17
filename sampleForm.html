@@ -12,9 +12,9 @@
 {% block content %}
   <h1>{{ entry.title }}</h1>
 
-  <form method="post" accept-charset="utf-8" name="{{ form.handle }}" class="formbuilder-form" id="{{ form.handle }}" data-parsley-errors-container=".formbuilder-notification">
+  <form method="post" accept-charset="utf-8" name="{{ form.handle }}" class="formbuilder-form" id="{{ form.handle }}" data-parsley-errors-container=".formbuilder-notification"{% if form.hasFileUploads %} enctype="multipart/form-data" {% endif %}>
     <input type="hidden" name="action" value="formBuilder/entries/saveFormEntry">
-    <input type="hidden" name="redirect" data-redirect="{{form.successPageRedirect}}" value="{{form.redirectUrl}}">
+    <input type="hidden" name="formredirect" data-redirect="{{form.successPageRedirect}}" value="{{form.redirectUrl}}">
     <input type="hidden" name="formHandle" value="{{form.handle}}">
     
     {% for tab in tabs %}

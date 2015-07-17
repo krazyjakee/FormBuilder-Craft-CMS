@@ -31,6 +31,14 @@ class FormBuilderVariable
   }
 
   //======================================================================
+  // Get All Asset Sources
+  //======================================================================
+  function getAllAssetSources()
+  {
+    return craft()->assetSources->allSources;
+  }
+
+  //======================================================================
   // Load Plugin Scripts
   //======================================================================
   function pluginScripts($form)

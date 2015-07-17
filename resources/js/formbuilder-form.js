@@ -10,8 +10,8 @@ ajaxForm = function() {
     notificationContainer.html('');
     e.preventDefault();
     url = '/admin/actions/' + $(this).children('[name=action]').attr('value');
-    redirect = $(this).children('[name=redirect]').attr('data-redirect');
-    redirectUrl = $(this).children('[name=redirect]').attr('value');
+    redirect = $(this).children('[name=formredirect]').attr('data-redirect');
+    redirectUrl = $(this).children('[name=formredirect]').attr('value');
     if ($(this).parsley().isValid()) {
       data = $(this).serialize();
       return $.post(url, data, function(response) {
