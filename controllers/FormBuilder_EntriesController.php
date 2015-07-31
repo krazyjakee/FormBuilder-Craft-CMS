@@ -114,7 +114,10 @@ class FormBuilder_EntriesController extends BaseController
         $formBuilderEntry->title = $form->name;
         $formBuilderEntry->data = $postData;
 
-// Use reCaptcha
+        $verified = true;
+        $validated = true;
+
+        // Use reCaptcha
         $useCaptcha = $form->useReCaptcha;
         if ($useCaptcha) {
             $captchaPlugin = craft()->plugins->getPlugin('recaptcha');
@@ -124,12 +127,22 @@ class FormBuilder_EntriesController extends BaseController
             } else {
                 $verified = false;
             }
-        } else {
-            $verified = true;
+        }
+
+        if($verified == true) {
+            $fieldLayoutFields = $form->getFieldLayout()->getFields();
+            foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
+                $field = $fieldLayoutField->getField();
+                if ($fieldLayoutField->required && $postData[$field->handle] == "") {
+                    $form->errorMessage = $field->name . " is a required field.";
+                    $validated = false;
+                    break;
+                }
+            }
         }
 
 // Save Form Entry
-        if ($verified && $fileupload && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
+        if ($verified && $validated && $fileupload && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
 
 // Save Uploaded File
             if ($validExtension) {
@@ -202,19 +215,6 @@ class FormBuilder_EntriesController extends BaseController
                 $this->redirectToPostedUrl();
             }
 
-            $fieldLayoutFields = $form->getFieldLayout()->getFields();
-            foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
-                $fieldId = $fieldLayoutField->fieldId;
-                $field = craft()->fields->getFieldById($fieldId);
-                if ($field->required) {
-                    if ($postData[$field->handle] == "") {
-                        craft()->userSession->setFlash('error', $field->name . " is a required field.");
-                        $this->redirectToPostedUrl();
-                        break;
-                    }
-                }
-            }
-
             if (!empty($form->errorMessage)) {
                 $errorMessage = $form->errorMessage;
             } else {
@@ -227,6 +227,7 @@ class FormBuilder_EntriesController extends BaseController
                 );
             } else {
                 if ($formRedirect) {
+                    craft()->userSession->setFlash('error', $errorMessage);
                     $this->redirectToPostedUrl();
                 } else {
                     craft()->userSession->setFlash('error', $errorMessage);
