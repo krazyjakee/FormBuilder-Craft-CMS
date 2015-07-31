@@ -94,10 +94,12 @@ class FormBuilder_EntriesController extends BaseController
                 }
 
                 if ($validExtension) {
-// Set the upload directory
-// TODO: get the folder based on the Source ID
-                    $uploadDir = CRAFT_BASE_PATH . '../secure_assets/uploads/';
-// Rename each file with unique name
+                    // Create formbuilder directory inside craft/storage if one doesn't exist
+                    $storagePath = craft()->path->getStoragePath();
+                    $myStoragePath = $storagePath . 'formbuilder/';
+                    IOHelper::ensureFolderExists($myStoragePath);
+                    $uploadDir = $myStoragePath;
+                    // Rename each file with unique name
                     $uniqe_filename = uniqid() . '-' . $filename;
 
                     foreach ($_FILES as $key => $value) {
