@@ -106,5 +106,4 @@ Save form.
 
 # TODO
 
-* Create more fieldtypes (dates, lightswitches, etc)
 * Add export/import functionality for the entries

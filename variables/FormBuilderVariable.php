@@ -53,28 +53,20 @@ class FormBuilderVariable
   }
 
   //======================================================================
-  // Load Plugin Styles
-  //======================================================================
-  function pluginStyles()
-  {
-    return craft()->templates->includeJsFile(UrlHelper::getResourceUrl('formbuilder/css/formbuilder-form.css'));
-  }
-
-  //======================================================================
   // Return Field's Input HTML
   //======================================================================
   function getInputHtml($field) 
   {
-    $theField = craft()->fields->getFieldById($field->fieldId);
-    $fieldType = $theField->getFieldType();
-    $requiredField = $field->required; 
-    $theField->required = $requiredField; 
+    $field = craft()->fields->getFieldById($field->fieldId);
+    $fieldType = $field->getFieldType();
 
-    // UPDATE TEMPLATE PATHS
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates'); 
-    $getPluginInputHtml = $fieldType->getInputHtml($theField, null); 
-    craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath()); 
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
 
-    return $getPluginInputHtml;
+    switch($field->getFieldType()->name) {
+      case "Plain Text":
+        return craft()->templates->render('fields/plainText', array("field" => $field));
+        break;
+      // todo, more types
+    }
   }
 }
