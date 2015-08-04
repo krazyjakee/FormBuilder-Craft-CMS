@@ -5,7 +5,7 @@
 {% set selectedTab = '' %}
 
 {% set extraPageHeaderHtml %}
-  {% include 'formbuilder/_includes/header.html' %}
+  {% include 'formbuilder/header.html' %}
 {% endset %}
 
 {% set content %}
@@ -27,7 +27,7 @@
 
       <tr>
         
-        <td><strong>{{ field.name }}</strong></td>
+        <td>{% if (field.name is defined) %}<strong>{{ field.name }}</strong>{% else %}&nbsp;{% endif %}</td>
 
         {% if value | checkArray == '1' %}
           <td>

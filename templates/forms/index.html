@@ -5,12 +5,13 @@
 {% set selectedTab = 'forms' %}
 
 {% set extraPageHeaderHtml %}
-	{% include 'formbuilder/_includes/header.html' %}
+	{% include 'formbuilder/header.html' %}
 {% endset %}
 
 {% set content %}
 	<div id="noforms"{% if forms %} class="hidden"{% endif %}>
 		<p>{{ "No forms exist yet."|t }}</p>
+	</div>
 	</div>
 
 	{% if forms|length %}

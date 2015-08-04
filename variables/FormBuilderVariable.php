@@ -71,7 +71,7 @@ class FormBuilderVariable
     $theField->required = $requiredField; 
 
     // UPDATE TEMPLATE PATHS
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates'); 
+    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates'); 
     $getPluginInputHtml = $fieldType->getInputHtml($theField, null); 
     craft()->path->setTemplatesPath(craft()->path->getSiteTemplatesPath()); 
 

@@ -16,6 +16,7 @@ class FormBuilder_PlainTextFieldType extends BaseFieldType
   //======================================================================
   public function getSettingsHtml()
   {
+      craft()->path->setTemplatesPath(craft()->path->cpTemplatesPath);
     $settings = craft()->templates->render('_components/fieldtypes/PlainText/settings', array(
       'settings' => $this->getSettings()
     ));
@@ -48,9 +49,9 @@ class FormBuilder_PlainTextFieldType extends BaseFieldType
     $required     = $name->required;
     $instructions = $name->instructions;
 
-    $id = craft()->templates->namespaceInputId($fieldId, 'field'); 
+    $id = craft()->templates->namespaceInputId($fieldId, 'field');
 
-    craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formbuilder/templates');
+    craft()->path->setTemplatesPath(craft()->path->cpTemplatesPath);
     $html = craft()->templates->render('_components/fieldtypes/PlainText/input', array(
       'id'            => $id,
       'name'          => $name,
@@ -59,7 +60,6 @@ class FormBuilder_PlainTextFieldType extends BaseFieldType
       'required'      => $required,
       'settings'      => $this->getSettings()
     ));
-    craft()->path->setTemplatesPath(craft()->path->getTemplatesPath());
 
     return $html;
   }
@@ -74,6 +74,7 @@ class FormBuilder_PlainTextFieldType extends BaseFieldType
       'multiline'     => array(AttributeType::Bool),
       'initialRows'   => array(AttributeType::Number, 'min' => 1, 'default' => 4),
       'maxLength'     => array(AttributeType::Number, 'min' => 0),
+        'validationType'  => array(AttributeType::Number, 'min' => 0)
     );
   }
 }

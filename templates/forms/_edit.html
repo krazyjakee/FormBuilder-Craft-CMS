@@ -1,11 +1,11 @@
 {% extends "_layouts/cp" %}
-{% import "formbuilder/_includes/forms" as forms %}
+{% import "/_includes/forms" as forms %}
 {% includeCssResource "formbuilder/css/formbuilder.css" %}
 
 {% set selectedTab = '' %}
 
 {% set extraPageHeaderHtml %}
-	{% include 'formbuilder/_includes/header.html' %}
+	{% include 'formbuilder/header.html' %}
 {% endset %}
 
 {% block content %}
@@ -277,7 +277,7 @@
 		
 		<h1 class="fields-toggle">{{ "Fields"|t }}</h1>
 		<div id="fields-container">
-		{% include "formbuilder/_includes/fieldlayoutdesigner" with {
+		{% include "/_includes/fieldlayoutdesigner" with {
 			fieldLayout: form.getFieldLayout(),
 			customizableTabs: true
 		} only %}

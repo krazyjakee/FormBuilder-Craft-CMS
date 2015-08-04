@@ -1,0 +1,59 @@
+<html>
+<head>
+    <title>New Contact Form Submitted</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        td {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% if form is defined %}
+        <h1>Contact Us [{{ entry.id }}]</h1>
+    {% endif %}
+    <hr>
+    {% if data is defined %}
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>{{ data.formName }}</td>
+            </tr>
+            {% if (data.formEmail is defined) %}
+            <tr>
+                <td>Email</td>
+                <td>{{ data.formEmail }}</td>
+            </tr>
+            {% endif %}
+            {% if (data.formBusinessName is defined) %}
+            <tr>
+                <td>Business Name</td>
+                <td>{{ data.formBusinessName }}</td>
+            </tr>
+            {% endif %}
+            {% if (data.formTelephone is defined) %}
+            <tr>
+                <td>Telephone</td>
+                <td>{{ data.formTelephone }}</td>
+            </tr>
+            {% endif %}
+            {% if (data.formAdditionalComments is defined) %}
+            <tr>
+                <td>Additional Comments</td>
+                <td>{{ data.formAdditionalComments }}</td>
+            </tr>
+            {% endif %}
+            {% if (data.formUploadPdf is defined) %}
+            <tr>
+                <td>Upload</td>
+                <td>http:{{ siteUrl }}internal/uploads/{{ data.formUploadPdf }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    {% endif %}
+    <hr>
+    <div style="margin-top: 50px;"></div>
+</body>
+</html>
