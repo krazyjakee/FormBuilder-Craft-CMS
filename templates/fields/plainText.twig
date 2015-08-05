@@ -1,1 +1,33 @@
-{{ field.handle }}
+{% spaceless %}
+    {#
+        $optsDefault = array(
+            "class" => "formbuilder__field",
+            "id" => "formbuilder_" . $field->handle,
+            "attributes" => false,
+            "label" => false,
+            "checked" => false,
+            "selected" => false
+        );
+    #}
+
+    {% set placeholder = "" %}
+    {% set required = "" %}
+
+    {% if field.settings.placeholder %}
+        {% set placeholder = "placeholder=\"" ~ field.settings.placeholder ~ "\" " %}
+    {% endif %}
+
+    {% if settings.required %}
+        {% set required = "required " %}
+    {% endif %}
+
+    {% if settings.label %}
+        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ settings.label }}</label>
+    {% endif %}
+
+    {% if field.settings.multiline %}
+        <textarea name="{{ field.handle }}" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
+    {% else %}
+        <input name="{{ field.handle }}" type="text" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+    {% endif %}
+{% endspaceless %}

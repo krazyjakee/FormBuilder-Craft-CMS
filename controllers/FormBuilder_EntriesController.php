@@ -3,55 +3,62 @@ namespace Craft;
 
 class FormBuilder_EntriesController extends BaseController
 {
-	protected $allowAnonymous = true;
+  protected $allowAnonymous = true;
   protected $defaultEmailTemplate = 'formbuilder/email/default';
-	protected $defaultRegistrantEmailTemplate = 'formbuilder/email/registrant';
+  protected $defaultRegistrantEmailTemplate = 'formbuilder/email/registrant';
 
 
   protected $valid_extensions = array('image', 'compressed', 'excel', 'html', 'illustrator', 'json', 'pdf', 'photoshop', 'powerpoint', 'text', 'video', 'word', 'xml');
   protected $assetFolderId = 1;
-	
-	//======================================================================
+
+  //======================================================================
   // View All Entries
   //======================================================================
-	public function actionEntriesIndex()
-	{
-		$variables['entries'] = craft()->formBuilder_entries->getAllEntries();
-		$variables['tabs'] = $this->_getTabs();
-		$this->renderTemplate('formbuilder/entries/index', $variables);
-	}
+  public function actionEntriesIndex()
+  {
+    $variables['entries'] = craft()->formBuilder_entries->getAllEntries();
+    $variables['tabs'] = $this->_getTabs();
+    $this->renderTemplate('formbuilder/entries/index', $variables);
+  }
 
   //======================================================================
   // View Single Entry
   //======================================================================
-	public function actionViewEntry(array $variables = array())
-	{
-		$entry              = craft()->formBuilder_entries->getFormEntryById($variables['entryId']);
-		$variables['entry'] = $entry;
+  public function actionViewEntry(array $variables = array())
+  {
+    $entry = craft()->formBuilder_entries->getFormEntryById($variables['entryId']);
+    $variables['entry'] = $entry;
 
-		if (empty($entry)) { throw new HttpException(404); }
+    if (empty($entry)) {
+      throw new HttpException(404);
+    }
 
-		$variables['form']        = craft()->formBuilder_forms->getFormById($entry->formId);
-		$variables['tabs']        = $this->_getTabs();
-		$variables['selectedTab'] = 'entries';
-		$variables['data']        = json_decode($entry->data, true);
+    $variables['form'] = craft()->formBuilder_forms->getFormById($entry->formId);
+    $variables['tabs'] = $this->_getTabs();
+    $variables['selectedTab'] = 'entries';
+    $variables['data'] = json_decode($entry->data, true);
 
-		$this->renderTemplate('formbuilder/entries/_view', $variables);
-	}
+    $this->renderTemplate('formbuilder/entries/_view', $variables);
+  }
 
-	//======================================================================
+  //======================================================================
   // Save Form Entry
   //======================================================================
-	public function actionSaveFormEntry()
-	{
+  public function actionSaveFormEntry()
+  {
     $ajax = false;
-    $redirect = false;
 
     $formBuilderHandle = craft()->request->getPost('formHandle');
-    if (!$formBuilderHandle) { throw new HttpException(404);}
-    
+    if (!$formBuilderHandle) {
+      throw new HttpException(404);
+    }
+
+
     $form = craft()->formBuilder_entries->getFormByHandle($formBuilderHandle);
-    if (!$form) { throw new HttpException(404); }
+
+    if (!$form) {
+      throw new HttpException(404);
+    }
 
     $ajaxSubmit = $form->ajaxSubmit;
     $formRedirect = $form->successPageRedirect;
@@ -64,7 +71,7 @@ class FormBuilder_EntriesController extends BaseController
     } else {
       $this->requirePostRequest();
     }
-    
+
     $data = craft()->request->getPost();
     $postData = $this->_filterPostKeys($data);
 
@@ -72,7 +79,6 @@ class FormBuilder_EntriesController extends BaseController
 //    foreach ($postData as $key => $value) {
 //        $field = craft()->fields->getFieldByHandle($key);
 //    }
-
 
 
     $formBuilderEntry = new FormBuilder_EntryModel();
@@ -93,12 +99,14 @@ class FormBuilder_EntriesController extends BaseController
         }
 
         if ($validExtension) {
-            // Set the upload directory
-            // TODO: get the folder based on the Source ID
-            $uploadDir = CRAFT_BASE_PATH . '../secure_assets/uploads/';
-                // Rename each file with unique name
+          // Create formbuilder directory inside craft/storage if one doesn't exist
+          $storagePath = craft()->path->getStoragePath();
+          $myStoragePath = $storagePath . 'formbuilder/';
+          IOHelper::ensureFolderExists($myStoragePath);
+          $uploadDir = $myStoragePath;
+          // Rename each file with unique name
           $uniqe_filename = uniqid() . '-' . $filename;
-          
+
           foreach ($_FILES as $key => $value) {
             $fileUploadHandle = $key;
           }
@@ -107,9 +115,12 @@ class FormBuilder_EntriesController extends BaseController
       }
     }
 
-    $formBuilderEntry->formId     = $form->id;
-    $formBuilderEntry->title      = $form->name;
-    $formBuilderEntry->data       = $postData;
+    $formBuilderEntry->formId = $form->id;
+    $formBuilderEntry->title = $form->name;
+    $formBuilderEntry->data = $postData;
+
+    $verified = true;
+    $validated = true;
 
     // Use reCaptcha
     $useCaptcha = $form->useReCaptcha;
@@ -121,12 +132,22 @@ class FormBuilder_EntriesController extends BaseController
       } else {
         $verified = false;
       }
-    } else {
-      $verified = true;
+    }
+
+    if($verified == true) {
+      $fieldLayoutFields = $form->getFieldLayout()->getFields();
+      foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
+        $field = $fieldLayoutField->getField();
+        if ($fieldLayoutField->required && $postData[$field->handle] == "") {
+          $form->errorMessage = $field->name . " is a required field.";
+          $validated = false;
+          break;
+        }
+      }
     }
 
     // Save Form Entry
-    if ($verified && $fileupload && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
+    if ($verified && $validated && $fileupload && craft()->formBuilder_entries->saveFormEntry($formBuilderEntry)) {
 
       // Save Uploaded File
       if ($validExtension) {
@@ -155,8 +176,6 @@ class FormBuilder_EntriesController extends BaseController
 
           craft()->assets->storeFile($fileModel);
 
-        } else {
-          $fileupload = false;
         }
 
       } // Valid extension
@@ -177,20 +196,20 @@ class FormBuilder_EntriesController extends BaseController
       if (!empty($form->successMessage)) {
         $successMessage = $form->successMessage;
       } else {
-        $successMessage =  Craft::t('Thank you, we have received your submission and we\'ll be in touch shortly.');
+        $successMessage = Craft::t('Thank you, we have received your submission and we\'ll be in touch shortly.');
       }
       craft()->userSession->setFlash('success', $successMessage);
 
       if ($ajax) {
         $this->returnJson(
-          ['success' => true, 'message' => $successMessage]
+            ['success' => true, 'message' => $successMessage]
         );
       } else {
         if ($formRedirect) {
           $this->redirect($formRedirectUrl);
         }
       }
-      
+
     } else {
       if (!$verified) {
         if (!$captchaPlugin) {
@@ -199,17 +218,30 @@ class FormBuilder_EntriesController extends BaseController
         }
         craft()->userSession->setFlash('error', 'Please check captcha!');
         $this->redirectToPostedUrl();
-      } 
+      }
+
+      $fieldLayoutFields = $form->getFieldLayout()->getFields();
+      foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
+        $fieldId = $fieldLayoutField->fieldId;
+        $field = craft()->fields->getFieldById($fieldId);
+        if ($field->required) {
+          if ($postData[$field->handle] == "") {
+            craft()->userSession->setFlash('error', $field->name . " is a required field.");
+            $this->redirectToPostedUrl();
+            break;
+          }
+        }
+      }
 
       if (!empty($form->errorMessage)) {
         $errorMessage = $form->errorMessage;
       } else {
-        $errorMessage =  Craft::t('We\'re sorry, but something has gone wrong.');
+        $errorMessage = Craft::t('We\'re sorry, but something has gone wrong.');
       }
 
       if ($ajax) {
         $this->returnJson(
-          ['error' => true, 'message' => $errorMessage]
+            ['error' => true, 'message' => $errorMessage]
         );
       } else {
         if ($formRedirect) {
@@ -220,32 +252,32 @@ class FormBuilder_EntriesController extends BaseController
       }
     }
 
-	}
+  }
 
-	//======================================================================
+  //======================================================================
   // Delete Form Entry
   //======================================================================
-	public function actionDeleteEntry()
-	{
-		$this->requirePostRequest();
+  public function actionDeleteEntry()
+  {
+    $this->requirePostRequest();
 
-		$entryId = craft()->request->getRequiredPost('entryId');
+    $entryId = craft()->request->getRequiredPost('entryId');
 
-		if (craft()->elements->deleteElementById($entryId)) {
-			craft()->userSession->setNotice(Craft::t('Entry deleted.'));
-			$this->redirectToPostedUrl();
-			craft()->userSession->setError(Craft::t('Couldn’t delete entry.'));
-		}
-	}
+    if (craft()->elements->deleteElementById($entryId)) {
+      craft()->userSession->setNotice(Craft::t('Entry deleted.'));
+      $this->redirectToPostedUrl();
+      craft()->userSession->setError(Craft::t('Couldn’t delete entry.'));
+    }
+  }
 
-	//======================================================================
+  //======================================================================
   // Send Email Notification to Admin
   //======================================================================
-	protected function _sendEmailNotification($record, $form)
-	{  
-		$data = new \stdClass($data);
-		$postData = $record->data;
-		$postData = $this->_filterPostKeys($postData);
+  protected function _sendEmailNotification($record, $form)
+  {
+    $data = new \stdClass($data);
+    $postData = $record->data;
+    $postData = $this->_filterPostKeys($postData);
 
 //        foreach ($postData as $key => $value) {
 //            $foo = $key;
@@ -254,100 +286,100 @@ class FormBuilder_EntriesController extends BaseController
 //            $baz = craft()->fields->getFieldByHandle($key);
 //        }
 
-		if (craft()->templates->findTemplate($form->notificationTemplatePath)) {
-			$template = $form->notificationTemplatePath;
-		}
+    if (craft()->templates->findTemplate($form->notificationTemplatePath)) {
+      $template = $form->notificationTemplatePath;
+    }
 
     if (!$template) {
       $template = $this->defaultEmailTemplate;
     }
 
     $variables = array(
-      'data'  => $postData,
-      'form'  => $form,
-      'entry' => $record
+        'data' => $postData,
+        'form' => $form,
+        'entry' => $record
     );
 
-    $message  = craft()->templates->render($template, $variables);
+    $message = craft()->templates->render($template, $variables);
 
-		if (craft()->formBuilder_entries->sendEmailNotification($form, $message, true, null)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    if (craft()->formBuilder_entries->sendEmailNotification($form, $message, true, null)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-	//======================================================================
+  //======================================================================
   // Send Email Notification to Submitter
   //======================================================================
-	protected function _sendRegistrantEmailNotification($record, $form, $submitterEmail)
-	{
-		$data = new \stdClass($data);
+  protected function _sendRegistrantEmailNotification($record, $form, $submitterEmail)
+  {
+    $data = new \stdClass($data);
 
-		$postData = $record->data;
-		$postData = $this->_filterPostKeys($postData);
+    $postData = $record->data;
+    $postData = $this->_filterPostKeys($postData);
 
-		if (craft()->templates->findTemplate($form->notificationTemplatePathRegistrant)) {
-			$template = $form->notificationTemplatePathRegistrant;
-		}
+    if (craft()->templates->findTemplate($form->notificationTemplatePathRegistrant)) {
+      $template = $form->notificationTemplatePathRegistrant;
+    }
 
-		if (!$template) {
-			$template = $this->defaultRegistrantEmailTemplate;
-		}
+    if (!$template) {
+      $template = $this->defaultRegistrantEmailTemplate;
+    }
 
-		$variables = array(
-			'data'  => $postData,
-			'form'  => $form,
-			'entry' => $record,
-		);
+    $variables = array(
+        'data' => $postData,
+        'form' => $form,
+        'entry' => $record,
+    );
 
-		$message = craft()->templates->render($template, $variables);
+    $message = craft()->templates->render($template, $variables);
 
     if (craft()->formBuilder_entries->sendRegistrantEmailNotification($form, $message, $submitterEmail, true, null)) {
       return true;
     } else {
       return false;
     }
-	}
+  }
 
   //======================================================================
   // Filter Out Unused Post Data
   //======================================================================
-	protected function _filterPostKeys($post)
-	{
-		$filterKeys = array(
-            'action',
-            'formredirect',
-            'g-recaptcha-response',
-            'formhandle',
-            'craft_csrf_token',
-            'redirect',
-            'formhoneypot'
-		);
-		if (is_array($post)) {
-			foreach ($post as $k => $v) {
-				if (in_array(strtolower($k), $filterKeys)) {
-					unset($post[$k]);
-				}
-			}
-		}
-		return $post;
-	}
+  protected function _filterPostKeys($post)
+  {
+    $filterKeys = array(
+        'action',
+        'formredirect',
+        'g-recaptcha-response',
+        'formhandle',
+        'craft_csrf_token',
+        'redirect',
+        'formhoneypot'
+    );
+    if (is_array($post)) {
+      foreach ($post as $k => $v) {
+        if (in_array(strtolower($k), $filterKeys)) {
+          unset($post[$k]);
+        }
+      }
+    }
+    return $post;
+  }
 
   //======================================================================
   // Get All Tabs
   //======================================================================
-	protected function _getTabs()
-	{
-		return array(
-			'forms' => array(
-				'label' => "Forms", 
-				'url'   => UrlHelper::getUrl('formbuilder/'),
-			),
-			'entries' => array(
-				'label' => "Entries", 
-				'url'   => UrlHelper::getUrl('formbuilder/entries'),
-			),
-		);
-	}
+  protected function _getTabs()
+  {
+    return array(
+        'forms' => array(
+            'label' => "Forms",
+            'url' => UrlHelper::getUrl('formbuilder/'),
+        ),
+        'entries' => array(
+            'label' => "Entries",
+            'url' => UrlHelper::getUrl('formbuilder/entries'),
+        ),
+    );
+  }
 }

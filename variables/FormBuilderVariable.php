@@ -39,34 +39,43 @@ class FormBuilderVariable
   }
 
   //======================================================================
-  // Load Plugin Scripts
-  //======================================================================
-  function pluginScripts($form)
-  {
-    if ($form->ajaxSubmit) {
-      $scripts = craft()->templates->includeJsFile(UrlHelper::getResourceUrl('formbuilder/js/parsley.min.js'));
-      $scripts .= craft()->templates->includeJsFile(UrlHelper::getResourceUrl('formbuilder/js/formbuilder-form.js'));
-      return $scripts;
-    } else {
-      return false;
-    }
-  }
-
-  //======================================================================
   // Return Field's Input HTML
   //======================================================================
-  function getInputHtml($field) 
+  function field($fieldHandle, $opts = array())
   {
-    $field = craft()->fields->getFieldById($field->fieldId);
-    $fieldType = $field->getFieldType();
 
+    // Handle both a field handle (string) and a field object.
+    $field = false;
+    if(gettype($fieldHandle) == "string"){
+      $field = craft()->fields->getFieldByHandle($fieldHandle);
+    }else{
+      $field = craft()->fields->getFieldById($fieldHandle->fieldId);
+    }
+
+    // Define a default options object
+    $optsDefault = array(
+        "class" => "formbuilder__field",
+        "id" => "formbuilder_" . $field->handle,
+        "attributes" => false,
+        "label" => false,
+        "labelClass" => "formbuilder__label",
+        "value" => false,
+        "checked" => false,
+        "selected" => false,
+        "required" => $field->required
+    );
+
+    // Add defaults into user options.
+    $opts = array_merge($optsDefault, $opts);
+
+    // Set the template path to formbuilders own directory
     craft()->path->setTemplatesPath(craft()->path->getPluginsPath().'formBuilder/templates');
 
+    // Detect the field type and render the appropriate template.
     switch($field->getFieldType()->name) {
       case "Plain Text":
-        return craft()->templates->render('fields/plainText', array("field" => $field));
+        return craft()->templates->render('fields/plainText', array("field" => $field, "settings" => $opts));
         break;
-      // todo, more types
     }
   }
 }
