@@ -5,8 +5,11 @@
             "id" => "formbuilder_" . $field->handle,
             "attributes" => false,
             "label" => false,
+            "labelClass" => "formbuilder__label",
+            "value" => false,
             "checked" => false,
-            "selected" => false
+            "selected" => false,
+            "required" => $fieldLayoutField->required
         );
     #}
 
@@ -30,4 +33,5 @@
     {% else %}
         <input name="{{ field.handle }}" type="text" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
     {% endif %}
+
 {% endspaceless %}
