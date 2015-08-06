@@ -1,6 +1,7 @@
 {% extends "_layouts/cp" %}
 {% import "/_includes/forms" as forms %}
 {% includeCssResource "formbuilder/css/formbuilder.css" %}
+{% includeJsResource "formbuilder/js/formbuilder.js" %}
 
 {% set selectedTab = '' %}
 
@@ -282,6 +283,8 @@
 			customizableTabs: true
 		} only %}
 		</div>
+
+        <input type="hidden" id="validationSettings" name="validationSettings" value="{{ form.validationSettings }}" />
 
 		<hr>
 

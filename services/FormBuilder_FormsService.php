@@ -90,6 +90,20 @@ class FormBuilder_FormsService extends BaseApplicationComponent
     }
 
     //======================================================================
+    // Get Form By layoutId
+    //======================================================================
+    public function getFormByLayoutId($layoutId)
+    {
+        $formRecord = FormBuilder_FormRecord::model()->findByAttributes(array(
+            'fieldLayoutId' => $layoutId
+        ));
+
+        if ($formRecord) {
+            return FormBuilder_FormModel::populateModel($formRecord);
+        }
+    }
+
+    //======================================================================
     // Save Form
     //======================================================================
     public function saveForm(FormBuilder_FormModel $form)
@@ -125,6 +139,8 @@ class FormBuilder_FormsService extends BaseApplicationComponent
         $formRecord->notifyRegistrant = $form->notifyRegistrant;
         $formRecord->notificationTemplatePathRegistrant = $form->notificationTemplatePathRegistrant;
         $formRecord->notificationFieldHandleName = $form->notificationFieldHandleName;
+        $formRecord->validationSettings = $form->validationSettings;
+
 
         $formRecord->validate();
         $form->addErrors($formRecord->getErrors());

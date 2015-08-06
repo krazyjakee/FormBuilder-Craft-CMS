@@ -47,12 +47,12 @@ class FormBuilderPlugin extends BasePlugin
 	public function registerCpRoutes()
 	{
 		return array(
-			'formbuilder'                                       => array('action' => 'formBuilder/forms/formIndex'),
-			'formbuilder/forms'                                 => array('action' => 'formBuilder/forms/formIndex'),
-			'formbuilder/forms/new'                             => array('action' => 'formBuilder/forms/editForm'),
-			'formbuilder/forms/(?P<formId>\d+)'                 => array('action' => 'formBuilder/forms/editForm'),
-			'formbuilder/entries'                 							=> array('action' => 'formBuilder/entries/entriesIndex'),
-			'formbuilder/entries/(?P<entryId>\d+)' 							=> array('action' => 'formBuilder/entries/viewEntry'),
+			'formbuilder' => array('action' => 'formBuilder/forms/formIndex'),
+			'formbuilder/forms' => array('action' => 'formBuilder/forms/formIndex'),
+			'formbuilder/forms/new' => array('action' => 'formBuilder/forms/editForm'),
+			'formbuilder/forms/(?P<formId>\d+)' => array('action' => 'formBuilder/forms/editForm'),
+			'formbuilder/entries' => array('action' => 'formBuilder/entries/entriesIndex'),
+			'formbuilder/entries/(?P<entryId>\d+)' => array('action' => 'formBuilder/entries/viewEntry'),
 		);
 	}
 }

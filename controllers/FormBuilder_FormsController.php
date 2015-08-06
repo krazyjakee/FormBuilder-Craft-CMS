@@ -71,6 +71,7 @@ class FormBuilder_FormsController extends BaseController
         $form->notifyRegistrant = craft()->request->getPost('notifyRegistrant');
         $form->notificationTemplatePathRegistrant = craft()->request->getPost('notificationTemplatePathRegistrant');
         $form->notificationFieldHandleName = craft()->request->getPost('notificationFieldHandleName');
+        $form->validationSettings = craft()->request->getPost('validationSettings');
 
         $fieldLayout = craft()->fields->assembleLayoutFromPost();
         $fieldLayout->type = ElementType::Asset;
