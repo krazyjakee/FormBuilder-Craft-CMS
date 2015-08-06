@@ -90,17 +90,21 @@ class FormBuilder_FormsService extends BaseApplicationComponent
     }
 
     //======================================================================
-    // Get Form By layoutId
+    // Get form validation settings
     //======================================================================
-    public function getFormByLayoutId($layoutId)
+    public function getFormValidationSettings($layoutId)
     {
         $formRecord = FormBuilder_FormRecord::model()->findByAttributes(array(
             'fieldLayoutId' => $layoutId
         ));
 
         if ($formRecord) {
-            return FormBuilder_FormModel::populateModel($formRecord);
+            $form = FormBuilder_FormModel::populateModel($formRecord);
+            if($form->validationSettings){
+                return json_decode($form->validationSettings);
+            }
         }
+
     }
 
     //======================================================================

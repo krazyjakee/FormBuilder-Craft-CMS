@@ -11,5 +11,7 @@
         }
     ],
     "type": "craft-plugin",
-    "require": {}
+    "require": {
+        "respect/validation": ">=0.9"
+    }
 }

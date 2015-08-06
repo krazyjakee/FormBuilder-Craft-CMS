@@ -46,6 +46,17 @@ class FormBuilderVariable
         // We need more information from the field itself, not just it's reference (fieldLayoutField).
         $field = craft()->fields->getFieldById($fieldLayoutField->fieldId);
 
+        // Get validation settings.
+        $validationType = false;
+        $validationSettings = craft()->formBuilder_forms->getFormValidationSettings($fieldLayoutField->layoutId);
+        if($validationSettings){
+            foreach($validationSettings as $vSetting){
+                if($vSetting->fieldId == $field->id){
+                    $validationType = $vSetting->value;
+                }
+            }
+        }
+
         // Define a default options object
         $optsDefault = array(
             "class" => "formbuilder__field",
@@ -57,7 +68,8 @@ class FormBuilderVariable
             "checked" => false,
             "selected" => false,
             "required" => $fieldLayoutField->required,
-            "placeholder" => false
+            "placeholder" => false,
+            "validation" => $validationType
         );
 
         // Add defaults into user options.

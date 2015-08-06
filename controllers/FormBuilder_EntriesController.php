@@ -135,14 +135,10 @@ class FormBuilder_EntriesController extends BaseController
     }
 
     if($verified == true) {
-      $fieldLayoutFields = $form->getFieldLayout()->getFields();
-      foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
-        $field = $fieldLayoutField->getField();
-        if ($fieldLayoutField->required && $postData[$field->handle] == "") {
-          $form->errorMessage = $field->name . " is a required field.";
-          $validated = false;
-          break;
-        }
+      $validation = craft()->formBuilder_forms->validateForm($form, $postData);
+      if($validation != true){
+        $form->errorMessage = $validation;
+        $validated = false;
       }
     }
 
@@ -218,19 +214,6 @@ class FormBuilder_EntriesController extends BaseController
         }
         craft()->userSession->setFlash('error', 'Please check captcha!');
         $this->redirectToPostedUrl();
-      }
-
-      $fieldLayoutFields = $form->getFieldLayout()->getFields();
-      foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
-        $fieldId = $fieldLayoutField->fieldId;
-        $field = craft()->fields->getFieldById($fieldId);
-        if ($field->required) {
-          if ($postData[$field->handle] == "") {
-            craft()->userSession->setFlash('error', $field->name . " is a required field.");
-            $this->redirectToPostedUrl();
-            break;
-          }
-        }
       }
 
       if (!empty($form->errorMessage)) {

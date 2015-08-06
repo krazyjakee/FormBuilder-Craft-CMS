@@ -13,6 +13,9 @@ namespace Craft;
 
 class FormBuilderPlugin extends BasePlugin
 {
+	public function init(){
+		require CRAFT_PLUGINS_PATH.'/formbuilder/vendor/autoload.php';
+	}
 	public function getName()
 	{
     return 'FormBuilder';
