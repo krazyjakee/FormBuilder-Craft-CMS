@@ -22,7 +22,7 @@
     {% endif %}
 
     {% if settings.label or settings.placeholder %}
-        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.name }}</label>
+        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.label }}</label>
     {% endif %}
 
     <input name="{{ field.handle }}" type="file" {{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />

@@ -138,7 +138,7 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
     //======================================================================
     public function validateForm($form, $postData){
         $fieldLayoutFields = $form->getFieldLayout()->getFields();
-        $validationSettings = craft()->formBuilder_forms->getFormValidationSettings($fieldLayoutFields->layoutId);
+        $validationSettings = craft()->formBuilder_forms->getFormValidationSettings($fieldLayoutFields[0]->layoutId);
         foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
             $fieldId = $fieldLayoutField->fieldId;
             $field = craft()->fields->getFieldById($fieldId);
@@ -149,43 +149,49 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
                     return $field->name . " is a required field.";
                 }
             }
+
+            $_processError = function($field, $message){
+                craft()->userSession->setFlash("error_" . $field->handle, $message);
+                return $message;
+            };
+
             foreach($validationSettings as $vSetting){
                 if($vSetting->fieldId == $fieldId){
                     $v = $vSetting->value;
                     switch($v){
                         case "alpha":
                             if(v::alpha()->validate($userValue) == false){
-                                return $field->name . " needs to contain A-Z characters only.";
+                                $_processError($field, $field->name . " needs to contain A-Z characters only.");
                             }
                             break;
                         case "alphanum":
                             if(v::alnum()->validate($userValue) == false){
-                                return $field->name . " needs to contain A-Z or 0-9 characters only.";
+                                $_processError($field, $field->name . " needs to contain A-Z or 0-9 characters only.");
                             }
                             break;
                         case "number":
                             if(v::numeric()->validate($userValue) == false){
-                                return $field->name . " needs to contain numbers only.";
+                                $_processError($field, $field->name . " needs to contain numbers only.");
                             }
                             break;
                         case "email":
                             if(v::email()->validate($userValue) == false){
-                                return $field->name . " needs to contain a valid email.";
+                                $_processError($field, $field->name . " needs to contain a valid email.");
                             }
                             break;
                         case "url":
                             if(v::url()->validate($userValue) == false){
-                                return $field->name . " needs to contain a valid website address.";
+                                $_processError($field, $field->name . " needs to contain a valid website address.");
                             }
                             break;
                         case "date":
                             if(v::date()->validate($userValue) == false){
-                                return $field->name . " needs to contain a valid date.";
+                                $_processError($field, $field->name . " needs to contain a valid date.");
                             }
                             break;
                         case "color":
                             if(v::HexRgbColor()->validate($userValue) == false){
-                                return $field->name . " needs to contain a valid color hex.";
+                                $_processError($field, $field->name . " needs to contain a valid color hex.");
                             }
                             break;
                     }

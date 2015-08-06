@@ -135,7 +135,7 @@ class FormBuilder_EntriesController extends BaseController
     }
 
     if($verified == true) {
-      $validation = craft()->formBuilder_forms->validateForm($form, $postData);
+      $validation = craft()->formBuilder_entries->validateForm($form, $postData);
       if($validation != true){
         $form->errorMessage = $validation;
         $validated = false;

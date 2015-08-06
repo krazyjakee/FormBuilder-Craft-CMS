@@ -57,6 +57,12 @@ class FormBuilderVariable
             }
         }
 
+        // Get errors
+        $error = false;
+        if(craft()->userSession->hasFlash("error_" . $field->handle)){
+            $error = craft()->userSession->getFlash("error_" . $field->handle);
+        }
+
         // Define a default options object
         $optsDefault = array(
             "class" => "formbuilder__field",
@@ -69,7 +75,8 @@ class FormBuilderVariable
             "selected" => false,
             "required" => $fieldLayoutField->required,
             "placeholder" => false,
-            "validation" => $validationType
+            "validation" => $validationType,
+            "error" => $error
         );
 
         // Add defaults into user options.
