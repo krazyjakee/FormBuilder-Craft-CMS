@@ -17,22 +17,14 @@
     {% set placeholder = "" %}
     {% set required = "" %}
 
-    {% if settings.placeholder %}
-        {% set placeholder = "placeholder=" ~ field.name ~ " " %}
-    {% endif %}
-
     {% if settings.required %}
         {% set required = "required " %}
     {% endif %}
 
-    {% if settings.label %}
+    {% if settings.label or settings.placeholder %}
         <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.name }}</label>
     {% endif %}
 
-    {% if field.settings.multiline %}
-        <textarea name="{{ field.handle }}" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
-    {% else %}
-        <input name="{{ field.handle }}" type="text" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
-    {% endif %}
+    <input name="{{ field.handle }}" type="file" {{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
 
 {% endspaceless %}

@@ -56,7 +56,8 @@ class FormBuilderVariable
             "value" => false,
             "checked" => false,
             "selected" => false,
-            "required" => $fieldLayoutField->required
+            "required" => $fieldLayoutField->required,
+            "placeholder" => false
         );
 
         // Add defaults into user options.
@@ -69,6 +70,9 @@ class FormBuilderVariable
         switch ($field->getFieldType()->name) {
             case "Plain Text":
                 return craft()->templates->render('fields/plainText', array("field" => $field, "settings" => $opts));
+                break;
+            case "Assets":
+                return craft()->templates->render('fields/assets', array("field" => $field, "settings" => $opts));
                 break;
         }
     }
