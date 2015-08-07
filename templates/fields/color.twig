@@ -4,4 +4,7 @@
         &nbsp;
         <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ settings.label }}</label>
     </div>
+    {% if settings.error %}
+        <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
+    {% endif %}
 {% endspaceless %}

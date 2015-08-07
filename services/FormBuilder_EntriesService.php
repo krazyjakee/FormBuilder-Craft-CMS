@@ -100,7 +100,12 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
         $email->replyTo = $emailTo[0];
         $email->fromName = craft()->getSiteName() . ' | Submission Notification';
         $email->subject = $form->subject;
-        $email->htmlBody = $message;
+        $email->htmlBody = $message->body;
+
+        if ($message->attachment)
+        {
+            $email->addAttachment($message->attachment->getTempName(), $message->attachment->getName(), 'base64', $message->attachment->getType());
+        }
 
         foreach ($emailTo as $emailAddress) {
             $email->toEmail = $emailAddress;
