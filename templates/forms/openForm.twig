@@ -1,0 +1,5 @@
+<form method="post" accept-charset="utf-8" name="{{ form.handle }}" class="{{ settings.class }}" id="{{ settings.id }}" {% if form.hasFileUploads %} enctype="multipart/form-data" {% endif %}>
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="formBuilder/entries/saveFormEntry" />
+    <input type="hidden" name="redirect" data-redirect="{{ form.successPageRedirect }}" value="{{ form.redirectUrl }}" />
+    <input type="hidden" name="formHandle" value="{{ form.handle }}" />

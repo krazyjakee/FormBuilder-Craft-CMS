@@ -1,17 +1,11 @@
 ![image](http://vadim-dev.s3.amazonaws.com/formbuilder/formBuilder_logo.png)
 
-[![image](https://img.shields.io/badge/version-1.4.3-brightgreen.svg)](https://github.com/roundhouse/FormBuilder-Craft-CMS)
-[![image](https://img.shields.io/packagist/v/roundhouse/formbuilder.svg)](https://packagist.org/packages/roundhouse/formbuilder)
-[![image](https://img.shields.io/github/license/mashape/apistatus.svg)](http://opensource.org/licenses/MIT)
-
 ***
-
-**Note** - I have updated a lot of the code so if you have already been using this pluging you'll need to uninstall it first and install it again. Sorry, but there were a lot of changes and creating db migrations was not an option. 
 
 # Installation
 
-* Clone this repo `https://github.com/roundhouse/FormBuilder-Craft-CMS`
-* Rename the folder to `FormBuilder` and place it into your Craft CMS Plugin directory.
+* Clone this repo `https://github.com/krazyjakee/FormBuilder-Craft-CMS`
+* Rename the folder to `formbuilder` and place it into your Craft CMS Plugin directory.
 * Navigate to your plugins page `/settings/plugins` and click Install
 
 ***
@@ -26,17 +20,7 @@
 # Create Fields
 
 * Got to `/settings/fields` and hit `+ New Field`
-* Fill out the field's information. Make sure to use `| FormBuilder |` fields only.
-
-#### Available Fields
-
-* | FormBuilder | Checkboxes
-* | FormBuilder | Dropdown
-* | FormBuilder | Email Address
-* | FormBuilder | File Upload
-* | FormBuilder | Multi-Select
-* | FormBuilder | Plain Text
-* | FormBuilder | Radio Buttons
+* Fill out the field's information.
 
 ***
 
@@ -73,7 +57,7 @@
 
 # Required Fields
 
-* If you want to make required fields you can do that by clicking on the "cog" icon in the Fields section. This will add HTML5 "required" attribute to the input field. If your form uses Ajax to post submissions, javascript will validate those fields (using Parsleyjs). [See Screenshot](http://vadim-dev.s3.amazonaws.com/formbuilder/1.4.png)
+* If you want to make required fields you can do that by clicking on the "cog" icon in the Fields section. This will add HTML5 "required" attribute to the input field. This plugin supports parsleyjs. [See Screenshot](http://vadim-dev.s3.amazonaws.com/formbuilder/1.4.png)
 
 ***
 
@@ -95,12 +79,11 @@
 * For `URL` enter `http://yourwebsite.com/craft/storage/`
 * Save!
 
-Now go create a new field `settings/fields`. For `Field Type` make sure to select `| FormBuilder | File Upload`. 
+Now go create a new field `settings/fields`. For `Field Type` make sure to select `Asset`.
 
 Now go to your form and in the Form Settings section check `Has File Uploads`. A drop down will appear, please select the Asset Source you created earlier [See Screenshot](http://vadim-dev.s3.amazonaws.com/formbuilder/file_upload_example.png). Now go to Fields section and drag the field you created to your form [See Gif](http://vadim-dev.s3.amazonaws.com/formbuilder/dragUploadField.gif). 
 
 Save form.
-
 
 ***
 

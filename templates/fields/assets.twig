@@ -22,9 +22,13 @@
     {% endif %}
 
     {% if settings.label or settings.placeholder %}
-        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.label }}</label>
+        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.name }}</label>
     {% endif %}
 
     <input name="{{ field.handle }}" type="file" {{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+
+    {% if settings.error %}
+        <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
+    {% endif %}
 
 {% endspaceless %}

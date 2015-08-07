@@ -143,7 +143,8 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
             $fieldId = $fieldLayoutField->fieldId;
             $field = craft()->fields->getFieldById($fieldId);
 
-            $userValue = $postData[$field->handle];
+            $userValue = (array_key_exists($field->handle, $postData)) ? $postData[$field->handle] : false;
+
             if ($field->required) {
                 if ($userValue == "") {
                     return $field->name . " is a required field.";
@@ -170,7 +171,7 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
                             }
                             break;
                         case "number":
-                            if(v::numeric()->validate($userValue) == false){
+                            if(v::numeric()->validate($userValue) == false && $userValue != ""){
                                 $_processError($field, $field->name . " needs to contain numbers only.");
                             }
                             break;

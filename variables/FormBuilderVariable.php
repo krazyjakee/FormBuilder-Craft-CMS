@@ -17,9 +17,17 @@ class FormBuilderVariable
     //======================================================================
     // Get Form By Handle
     //======================================================================
-    function getFormByHandle($formHandle)
+    function getForm($formHandle)
     {
         return craft()->formBuilder_forms->getFormByHandle($formHandle);
+    }
+
+    //======================================================================
+    // Get Fields By Form
+    //======================================================================
+    function getFields($form)
+    {
+        return $form->fieldLayout->getFieldLayout()->getFields();
     }
 
     //======================================================================
@@ -85,14 +93,48 @@ class FormBuilderVariable
         // Set the template path to formbuilders own directory
         craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'formBuilder/templates');
 
+        $output = "";
         // Detect the field type and render the appropriate template.
         switch ($field->getFieldType()->name) {
             case "Plain Text":
-                return craft()->templates->render('fields/plainText', array("field" => $field, "settings" => $opts));
+                $output = craft()->templates->render('fields/plainText', array("field" => $field, "settings" => $opts));
                 break;
             case "Assets":
-                return craft()->templates->render('fields/assets', array("field" => $field, "settings" => $opts));
+                $output = craft()->templates->render('fields/assets', array("field" => $field, "settings" => $opts));
                 break;
         }
+
+        return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
+
     }
+
+    //======================================================================
+    // Return Opening form tag
+    //======================================================================
+    function openForm($form, $opts = array()){
+
+        // Define a default options object
+        $optsDefault = array(
+            "class" => "formbuilder__form",
+            "id" => "formbuilder_" . $form->handle,
+            "attributes" => false
+        );
+
+        // Add defaults into user options.
+        $opts = array_merge($optsDefault, $opts);
+
+        // Set the template path to formbuilders own directory
+        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'formBuilder/templates');
+
+        $output = craft()->templates->render('forms/openForm', array("form" => $form, "settings" => $opts));
+        return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
+    }
+
+    //======================================================================
+    // Return Closing form tag for template clarity
+    //======================================================================
+    function closeForm($form = false){
+        return new \Twig_Markup("</form>", craft()->templates->getTwig()->getCharset());
+    }
+
 }

@@ -1,45 +1,25 @@
-{#
- # Contact Form Sample Code
- # ------------------------
- #}
+{% set form = craft.formBuilder.getForm('quoteUs') %}
 
-{% extends "_layout" %}
+{{ craft.formBuilder.openForm(form, {
+  class: 'quote',
+  id: 'awesome_form'
+}) }}
 
-{% set form = craft.formBuilder.getFormByHandle('ENTER YOUR FORM HANDLE HERE') %}
-{% set tabs = form.fieldLayout.getFieldLayout().getTabs() %}
-{% set pluginScripts = craft.formBuilder.pluginScripts(form) %}
+{% for field in craft.formBuilder.getFields(form) %}
+  <div class="form-group">
+    {# defaults #}
+    {{ craft.formBuilder.field(field, {
+      "class": "formbuilder__field",
+      "id": "formbuilder_" . field.handle,
+      "attributes": "",
+      "label": true, {# bool #}
+      "labelClass": "formbuilder__label",
+      "value": "",
+      "placeholder": ""
+    }) }}
+  </div>
+{% endfor %}
 
-{% block content %}
-  <h1>{{ entry.title }}</h1>
+<input type="submit" class="submit" value="Request Quote">
 
-  <form method="post" accept-charset="utf-8" name="{{ form.handle }}" class="formbuilder-form" id="{{ form.handle }}" data-parsley-errors-container=".formbuilder-notification"{% if form.hasFileUploads %} enctype="multipart/form-data" {% endif %}>
-    <input type="hidden" name="action" value="formBuilder/entries/saveFormEntry">
-    <input type="hidden" name="formredirect" data-redirect="{{form.successPageRedirect}}" value="{{form.redirectUrl}}">
-    <input type="hidden" name="formHandle" value="{{form.handle}}">
-    
-    {% for tab in tabs %}
-      {% set fields = tab.getFields() %}
-      
-      <fieldset class="{{loop.index}}">
-        <legend>{{ tab.name }}</legend>
-        {% for field in fields %}
-          {% set input = craft.formBuilder.getInputHtml(field) %}
-          {{ input | raw }}
-        {% endfor %} 
-      </fieldset>
-    {% endfor %}
-    
-    {# Error/Success Messages #}
-    {% if craft.session.hasFlash('error') or craft.session.hasFlash('success') %}
-      {% if craft.session.hasFlash('error') %}<div class="formbuilder-notification"><p class="error-message">{{ craft.session.getFlash('error') | raw }}<p></div>{% endif %}
-      {% if craft.session.hasFlash('success') %}<div class="formbuilder-notification success"><p class="success-message">{{ craft.session.getFlash('success') | raw }}</p></div>{% endif %}
-    {% else %}
-      <div class="formbuilder-notification"></div>
-    {% endif %}
-
-    <button type="submit">Submit Message</button>
-
-
-  </form>
-
-{% endblock %}
+{{ craft.formBuilder.closeForm(form) }}

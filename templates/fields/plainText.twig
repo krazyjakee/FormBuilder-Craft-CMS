@@ -38,9 +38,13 @@
     {% endif %}
 
     {% if field.settings.multiline %}
-        <textarea name="{{ field.handle }}" data-parsley-type="{{ validation }}" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
+        <textarea name="{{ field.handle }}" data-parsley-type="{{ validation }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
     {% else %}
-        <input name="{{ field.handle }}" data-parsley-type="{{ validation }}" type="{{ inputType }}" {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+        <input name="{{ field.handle }}" data-parsley-type="{{ validation }}" type="{{ inputType }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+    {% endif %}
+
+    {% if settings.error %}
+        <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
     {% endif %}
 
 {% endspaceless %}
