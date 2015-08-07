@@ -7,17 +7,23 @@
 
 {% for field in craft.formBuilder.getFields(form) %}
   <div class="form-group">
-    {# defaults #}
-    {{ craft.formBuilder.field(field, {
-      "class": "formbuilder__field",
-      "id": "formbuilder_" . field.handle,
-      "attributes": "",
-      "label": true, {# bool #}
-      "labelClass": "formbuilder__label",
-      "value": "",
-      "placeholder": ""
-    }) }}
-  </div>
+    {% switch craft.formBuilder.getFieldType(field) %}
+      {% case "Plain Text" %}
+        {{ craft.formBuilder.field(field, {
+          "class": "formbuilder__field",
+          "id": "formbuilder_" . field.handle,
+          "attributes": "",
+          "label": true, {# bool #}
+          "labelClass": "formbuilder__label",
+          "value": "",
+          "placeholder": ""
+        }) }}
+      {% case "Dropdown" %}
+        {{ craft.formBuilder.field(field, { class: 'text', placeholder: "Please select a value...", label: false }) }}
+      {% default %}
+        {{ craft.formBuilder.field(field, { class: 'text' }) }}
+    {% endswitch %}
+   </div>
 {% endfor %}
 
 <input type="submit" class="submit" value="Request Quote">
