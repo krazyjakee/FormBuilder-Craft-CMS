@@ -1,0 +1,7 @@
+{% spaceless %}
+    <div class="{{ settings.class }}">
+        <input type="color" name="{{ field.handle }}" id="{{ settings.id }}" {% if settings.required %}required{% endif %} />
+        &nbsp;
+        <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ settings.label }}</label>
+    </div>
+{% endspaceless %}

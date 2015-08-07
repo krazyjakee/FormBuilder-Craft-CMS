@@ -31,6 +31,14 @@ class FormBuilderVariable
     }
 
     //======================================================================
+    // Get Field Type
+    //======================================================================
+    function getFieldType($fieldLayoutField)
+    {
+        return craft()->fields->getFieldById($fieldLayoutField->fieldId)->getFieldType()->name;
+    }
+
+    //======================================================================
     // Get Form By ID
     //======================================================================
     function getFormById($formId)
@@ -76,7 +84,7 @@ class FormBuilderVariable
             "class" => "formbuilder__field",
             "id" => "formbuilder_" . $field->handle,
             "attributes" => false,
-            "label" => false,
+            "label" => $field->name,
             "labelClass" => "formbuilder__label",
             "value" => false,
             "checked" => false,
@@ -93,18 +101,39 @@ class FormBuilderVariable
         // Set the template path to formbuilders own directory
         craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'formBuilder/templates');
 
+        $_renderTemplate = function($templateTitle, $field, $opts){
+            $output = craft()->templates->render('fields/' . $templateTitle, array("field" => $field, "settings" => $opts));
+            return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
+        };
+
         $output = "";
         // Detect the field type and render the appropriate template.
         switch ($field->getFieldType()->name) {
             case "Plain Text":
-                $output = craft()->templates->render('fields/plainText', array("field" => $field, "settings" => $opts));
+                return $_renderTemplate('plainText', $field, $opts);
                 break;
             case "Assets":
-                $output = craft()->templates->render('fields/assets', array("field" => $field, "settings" => $opts));
+                return $_renderTemplate('assets', $field, $opts);
+                break;
+            case "Checkboxes":
+                return $_renderTemplate('checkboxes', $field, $opts);
+                break;
+            case "Date/Time":
+                return $_renderTemplate('datetime', $field, $opts);
+                break;
+            case "Multi-select":
+                return $_renderTemplate('multiselect', $field, $opts);
+                break;
+            case "Radio Buttons":
+                return $_renderTemplate('radiobuttons', $field, $opts);
+                break;
+            case "Color":
+                return $_renderTemplate('color', $field, $opts);
+                break;
+            case "Dropdown":
+                return $_renderTemplate('dropdown', $field, $opts);
                 break;
         }
-
-        return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
 
     }
 

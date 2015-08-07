@@ -1,0 +1,27 @@
+{% spaceless %}
+
+    {% set placeholder = "" %}
+    {% set required = "" %}
+
+    {% if settings.required %}
+        {% set required = "required " %}
+    {% endif %}
+
+    {% if settings.label %}
+        <label for="{{ settings.id }}" class="{{ settings.labelClass }}">{{ settings.label }}</label>
+    {% endif %}
+
+    <select class="{{ settings.class }}" name="{{ field.handle }}" id="{{ settings.id }}" {{ required }}multiple>
+        {% for option in field.settings.options %}
+
+            {% set checked = (option.default ? "checked" : false) %}
+
+            <option value="{{ option.value }}" {% if option.default %}selected{% endif %}>{{ option.label }}</option>
+
+        {% endfor %}
+    </select>
+
+    {% if settings.error %}
+        <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
+    {% endif %}
+{% endspaceless %}

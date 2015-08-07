@@ -1,0 +1,21 @@
+{% spaceless %}
+    {% if settings.label %}
+        <div class="{{ settings.labelClass }}">{{ settings.label }}</div>
+    {% endif %}
+
+    {% for option in field.settings.options %}
+
+        {% set checked = (option.default ? "checked" : false) %}
+        {% set id = settings.id ~ "_" ~ loop.index %}
+
+        <div class="{{ settings.class }}">
+            <input type="radio" name="{{ field.handle }}[]" value="{{ option.value }}" id="{{ id }}" {% if settings.required %}required{% endif %} />
+            &nbsp;<label for="{{ id }}">{{ option.label }}</label>
+        </div>
+
+    {% endfor %}
+
+    {% if settings.error %}
+        <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
+    {% endif %}
+{% endspaceless %}

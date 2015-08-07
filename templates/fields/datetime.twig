@@ -16,20 +16,14 @@
         );
     #}
 
-    {% set validation = settings.validation|default("text") %}
-    {% set inputType = validation %}
-    {% if validation == "alpha" or validation == "alphanum" %}
-        {% set inputType = "text" %}
-    {% endif %}
+    {% set datetime = field.settings.showDate ? "date" : "" %}
+    {% set datetime = field.settings.showTime ? datetime ~ "time" : datetime %}
 
     {% set placeholder = "" %}
     {% set required = "" %}
 
     {% if settings.placeholder %}
-        {% set placeholder = "placeholder=" ~ settings.placeholder ~ " " %}
-        {% if settings.placeholder == true %}
-            {% set placeholder = "placeholder=" ~ field.name ~ " " %}
-        {% endif %}
+        {% set placeholder = "placeholder=" ~ field.name ~ " " %}
     {% endif %}
 
     {% if settings.required %}
@@ -40,11 +34,8 @@
         <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.name }}</label>
     {% endif %}
 
-    {% if field.settings.multiline %}
-        <textarea name="{{ field.handle }}" data-parsley-type="{{ validation }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
-    {% else %}
-        <input name="{{ field.handle }}" data-parsley-type="{{ validation }}" type="{{ inputType }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
-    {% endif %}
+    <input name="{{ field.handle }}" data-parsley-type="{{ datetime }}" type="{{ datetime }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+
 
     {% if settings.error %}
         <ul class="parsley-errors-list filled"><li class="parsley-required">{{ settings.error }}</li></ul>
