@@ -1,7 +1,5 @@
 #page-header { padding: 5px 0; }
 #page-header > h1 { display: none; }
-#page-header .github-badges::after { clear: both; content: ""; display: table; }
-#page-header .github-badges a { float: left; margin-right: 4px; }
 
 #extra-headers a { display: block; outline: none; }
 #extra-headers .icon { float: left; margin-top: 14px; }

@@ -153,8 +153,8 @@ class FormBuilder_FormsService extends BaseApplicationComponent
 
         if ($form->notifyRegistrant) {
             if ($emailField) {
-                if ($emailField->type != 'FormBuilder_Email') {
-                    $form->addError('notificationFieldHandleName', 'Must be an email fieldtype.');
+                if ($emailField->type != 'PlainText') {
+                    $form->addError('notificationFieldHandleName', 'Must be a plaintext fieldtype.');
                     return false;
                 }
             } else {

@@ -53,7 +53,6 @@ class FormBuilder_EntriesController extends BaseController
             throw new HttpException(404);
         }
 
-
         $form = craft()->formBuilder_entries->getFormByHandle($formBuilderHandle);
 
         if (!$form) {
@@ -95,15 +94,17 @@ class FormBuilder_EntriesController extends BaseController
                     $validExtension = false;
                     craft()->userSession->setFlash('error_' . $fileUploadHandle, "Please upload a valid filetype.");
                 } else {
+                    $validExtension = true;
                     $fileupload = $fileUploadHandle;
                 }
 
                 if ($validExtension) {
-                    // Create formbuilder directory inside craft/storage if one doesn't exist
-                    $storagePath = craft()->path->getStoragePath();
-                    $myStoragePath = $storagePath . 'formbuilder/';
-                    IOHelper::ensureFolderExists($myStoragePath);
-                    $uploadDir = $myStoragePath;
+
+                    $assetSource = craft()->assetSources->getSourceById($form->uploadSource);
+                    $uploadDir = $assetSource->settings['path'];
+                    if(file_exists($uploadDir) == false){
+                        mkdir($uploadDir, 0664);
+                    }
                     // Rename each file with unique name
                     $uniqe_filename = uniqid() . '-' . $filename;
 
@@ -149,8 +150,8 @@ class FormBuilder_EntriesController extends BaseController
 
                     $fileModel->sourceId = $form->uploadSource;
 
-                    // TODO: Set the folder ID based on the Source ID
-                    $fileModel->folderId = 7;
+                    $assetFolderModel = craft()->assets->findFolder(['sourceId' => $fileModel->sourceId]);
+                    $fileModel->folderId = $assetFolderModel->id;
 
                     $fileModel->filename = IOHelper::getFileName($uniqe_filename);
                     $fileModel->originalName = IOHelper::getFileName($filename);
@@ -169,7 +170,6 @@ class FormBuilder_EntriesController extends BaseController
                 }
 
             } // Valid extension
-
 
             if ($form->notifyFormAdmin && $form->toEmail != '') {
                 $this->_sendEmailNotification($formBuilderEntry, $form);

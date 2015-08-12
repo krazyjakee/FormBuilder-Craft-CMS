@@ -109,9 +109,9 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
 
         foreach ($emailTo as $emailAddress) {
             $email->toEmail = $emailAddress;
-            if (!craft()->email->sendEmail($email)) {
+            /* if (!craft()->email->sendEmail($email)) {
                 $errors = true;
-            }
+            } */
         }
         return $errors ? false : true;
     }
