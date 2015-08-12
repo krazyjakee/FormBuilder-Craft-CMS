@@ -144,62 +144,64 @@ class FormBuilder_EntriesService extends BaseApplicationComponent
     public function validateForm($form, $postData){
         $fieldLayoutFields = $form->getFieldLayout()->getFields();
         $validationSettings = craft()->formBuilder_forms->getFormValidationSettings($fieldLayoutFields[0]->layoutId);
-        foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
-            $fieldId = $fieldLayoutField->fieldId;
-            $field = craft()->fields->getFieldById($fieldId);
+        if($validationSettings != ""){
+            foreach ($fieldLayoutFields as $key => $fieldLayoutField) {
+                $fieldId = $fieldLayoutField->fieldId;
+                $field = craft()->fields->getFieldById($fieldId);
 
-            $userValue = (array_key_exists($field->handle, $postData)) ? $postData[$field->handle] : false;
+                $userValue = (array_key_exists($field->handle, $postData)) ? $postData[$field->handle] : false;
 
-            if ($field->required) {
-                if ($userValue == "") {
-                    return $field->name . " is a required field.";
+                if ($field->required) {
+                    if ($userValue == "") {
+                        return $field->name . " is a required field.";
+                    }
                 }
-            }
 
-            $_processError = function($field, $message){
-                craft()->userSession->setFlash("error_" . $field->handle, $message);
-                return $message;
-            };
+                $_processError = function($field, $message){
+                    craft()->userSession->setFlash("error_" . $field->handle, $message);
+                    return $message;
+                };
 
-            foreach($validationSettings as $vSetting){
-                if($vSetting->fieldId == $fieldId){
-                    $v = $vSetting->value;
-                    switch($v){
-                        case "alpha":
-                            if(v::alpha()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain A-Z characters only.");
-                            }
-                            break;
-                        case "alphanum":
-                            if(v::alnum()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain A-Z or 0-9 characters only.");
-                            }
-                            break;
-                        case "number":
-                            if(v::numeric()->validate($userValue) == false && $userValue != ""){
-                                $_processError($field, $field->name . " needs to contain numbers only.");
-                            }
-                            break;
-                        case "email":
-                            if(v::email()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain a valid email.");
-                            }
-                            break;
-                        case "url":
-                            if(v::url()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain a valid website address.");
-                            }
-                            break;
-                        case "date":
-                            if(v::date()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain a valid date.");
-                            }
-                            break;
-                        case "color":
-                            if(v::HexRgbColor()->validate($userValue) == false){
-                                $_processError($field, $field->name . " needs to contain a valid color hex.");
-                            }
-                            break;
+                foreach($validationSettings as $vSetting){
+                    if($vSetting->fieldId == $fieldId){
+                        $v = $vSetting->value;
+                        switch($v){
+                            case "alpha":
+                                if(v::alpha()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain A-Z characters only.");
+                                }
+                                break;
+                            case "alphanum":
+                                if(v::alnum()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain A-Z or 0-9 characters only.");
+                                }
+                                break;
+                            case "number":
+                                if(v::numeric()->validate($userValue) == false && $userValue != ""){
+                                    $_processError($field, $field->name . " needs to contain numbers only.");
+                                }
+                                break;
+                            case "email":
+                                if(v::email()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain a valid email.");
+                                }
+                                break;
+                            case "url":
+                                if(v::url()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain a valid website address.");
+                                }
+                                break;
+                            case "date":
+                                if(v::date()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain a valid date.");
+                                }
+                                break;
+                            case "color":
+                                if(v::HexRgbColor()->validate($userValue) == false){
+                                    $_processError($field, $field->name . " needs to contain a valid color hex.");
+                                }
+                                break;
+                        }
                     }
                 }
             }

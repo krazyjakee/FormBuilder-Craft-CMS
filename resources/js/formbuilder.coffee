@@ -1,5 +1,5 @@
 $validationSettingsElem = $('#validationSettings')
-validationSettings = JSON.parse($validationSettingsElem.val()) if $validationSettingsElem.val()
+validationSettings = (if $validationSettingsElem.val() then JSON.parse($validationSettingsElem.val()) else [])
 
 validationFormBody = """
 <div class='formBuilderUI'>
@@ -93,3 +93,4 @@ init = ->
       elem.addClass("has-validation")
 
 init()
+

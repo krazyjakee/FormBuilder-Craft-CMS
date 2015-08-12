@@ -22,28 +22,17 @@
         {% set inputType = "text" %}
     {% endif %}
 
-    {% set placeholder = "" %}
-    {% set required = "" %}
-
-    {% if settings.placeholder %}
-        {% set placeholder = "placeholder=" ~ settings.placeholder ~ " " %}
-        {% if settings.placeholder == true %}
-            {% set placeholder = "placeholder=" ~ field.name ~ " " %}
-        {% endif %}
-    {% endif %}
-
-    {% if settings.required %}
-        {% set required = "required " %}
-    {% endif %}
+    {% set placeholder = (settings.placeholder ? field.name : "") %}
+    {% set required = (settings.required ? "required" : "") %}
 
     {% if settings.label %}
         <label class="{{ settings.labelClass }}" for="{{ settings.id }}">{{ field.name }}</label>
     {% endif %}
 
     {% if field.settings.multiline %}
-        <textarea name="{{ field.handle }}" data-parsley-type="{{ validation }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
+        <textarea name="{{ field.handle }}" data-parsley-type="{{ validation }}" {% if settings.error %}parsley-error{% endif %} placeholder="{{ placeholder }}" {{ required }}id="{{ settings.id }}" class="{{ settings.class }}" ></textarea>
     {% else %}
-        <input name="{{ field.handle }}" data-parsley-type="{{ validation }}" type="{{ inputType }}" {% if settings.error %}parsley-error{% endif %} {{ placeholder }}{{ required }}id="{{ settings.id }}" class="{{ settings.class }}" />
+        <input name="{{ field.handle }}" data-parsley-type="{{ validation }}" type="{{ inputType }}" {% if settings.error %}parsley-error{% endif %} placeholder="{{ placeholder }}" {{ required }} id="{{ settings.id }}" class="{{ settings.class }}" />
     {% endif %}
 
     {% if settings.error %}

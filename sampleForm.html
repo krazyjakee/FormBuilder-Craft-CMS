@@ -11,9 +11,9 @@
       {% case "Plain Text" %}
         {{ craft.formBuilder.field(field, {
           "class": "formbuilder__field",
-          "id": "formbuilder_" . field.handle,
+          "id": "formbuilder_" ~ field.id,
           "attributes": "",
-          "label": true, {# bool #}
+          "label": "Label!",
           "labelClass": "formbuilder__label",
           "value": "",
           "placeholder": ""

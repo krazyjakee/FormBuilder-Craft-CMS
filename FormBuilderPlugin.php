@@ -23,17 +23,17 @@ class FormBuilderPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-    return '1.4.3';
+    return '1.0';
 	}
 
 	public function getDeveloper()
 	{
-    return 'Roundhouse Agency';
+    return 'NexusOs';
 	}
 
 	public function getDeveloperUrl()
 	{
-    return 'http://roundhouseagency.com';
+    return 'http://nexusos.co.uk';
 	}
 
 	public function addTwigExtension()  

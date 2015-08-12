@@ -1,6 +1,6 @@
 {% spaceless %}
     {% if settings.label %}
-        <div class="{{ settings.labelClass }}">{{ settings.label }}</div>
+        <label id="{{ settings.id }}" class="{{ settings.labelClass }}">{{ settings.label }}</label>
     {% endif %}
 
     {% for option in field.settings.options %}
@@ -9,7 +9,7 @@
         {% set id = settings.id ~ "_" ~ loop.index %}
 
         <div class="{{ settings.class }}">
-            <input type="radio" name="{{ field.handle }}[]" value="{{ option.value }}" id="{{ id }}" {% if settings.required %}required{% endif %} />
+            <input type="radio" name="{{ field.handle }}[]" value="{{ option.value }}" id="{{ id }}" {% if settings.required %}required{% endif %} {{ checked }} />
             &nbsp;<label for="{{ id }}">{{ option.label }}</label>
         </div>
 
