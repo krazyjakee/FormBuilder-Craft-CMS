@@ -99,10 +99,12 @@ class FormBuilderVariable
         $opts = array_merge($optsDefault, $opts);
 
         // Set the template path to formbuilders own directory
+        $GLOBALS['oldTemplatePath'] = craft()->path->getTemplatesPath();
         craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'formBuilder/templates');
 
         $_renderTemplate = function($templateTitle, $field, $opts){
             $output = craft()->templates->render('fields/' . $templateTitle, array("field" => $field, "settings" => $opts));
+            craft()->path->setTemplatesPath($GLOBALS['oldTemplatePath']);
             return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
         };
 
@@ -153,9 +155,11 @@ class FormBuilderVariable
         $opts = array_merge($optsDefault, $opts);
 
         // Set the template path to formbuilders own directory
+        $oldPath = craft()->path->getTemplatesPath();
         craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'formBuilder/templates');
 
         $output = craft()->templates->render('forms/openForm', array("form" => $form, "settings" => $opts));
+        craft()->path->setTemplatesPath($oldPath);
         return new \Twig_Markup($output, craft()->templates->getTwig()->getCharset());
     }
 
